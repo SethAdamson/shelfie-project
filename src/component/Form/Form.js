@@ -8,7 +8,19 @@ export default class Form extends Component {
         this.state = {
             name: '',
             price: 0,
-            imgurl: ''
+            imgurl: '',
+            current: null
+        }
+    }
+
+    componentDidUpdate(props){
+        if(props.changeProduct !== this.props.changeProduct){
+            this.setState({
+                current: this.props.changeProduct.id,
+                name: this.props.changeProduct.name,
+                price: this.props.changeProduct.price,
+                imgurl: this.props.changeProduct.imgurl,
+            })
         }
     }
 
@@ -46,16 +58,24 @@ postProduct(){
     axios.post('/api/product',{name, price, imgurl}).then(res => {
         this.props.getProducts();
         this.resetState();
-        this.refs.form.reset();
+    }) 
+}
+
+editProduct() {
+    let {name, price, imgurl, current} = this.state;
+    axios.put(`/api/product/${current}`,{name, price, imgurl}).then(res => {
+        this.props.getProducts();
+        this.resetState();
     })
 }
 
 
     render(){
         console.log(this.state)
+        let {editting} = this.props
         return(
             <div className='formParent'>
-                <form onSubmit={() => this.postProduct()} ref='form' >
+                <form ref='form' >
                     Image URL:
                     <input 
                         className='image' 
@@ -70,9 +90,15 @@ postProduct(){
                     <input 
                         className='price' 
                         onChange={(e) => this.handlePrice(e.target.value)} 
-                        />
-                    <button className='cancel' onClick={() => this.resetState()} >Cancel</button>
-                    <button  type='submit' className='add' onClick={() => this.postProduct()} >Add to Inventory</button>
+                        />                   
+                    <button type='reset' className='cancel' onClick={() => this.resetState()} >Cancel</button>
+                    {
+                        editting
+                        ?
+                        <button type='submit' className='add' onClick={() => this.editProduct()} >Save Changes</button>
+                        :
+                        <button type='submit' className='add' onClick={() => this.postProduct()}>Add to Inventory</button>
+                    }
                 </form>
             </div> 
         )

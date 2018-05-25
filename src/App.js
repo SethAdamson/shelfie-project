@@ -10,11 +10,13 @@ class App extends Component {
     super();
 
     this.state = {
-      inventory: []
+      inventory: [],
+      editting: false,
+      changeProduct: {}
     }
 
     this.getProducts = this.getProducts.bind(this);
-
+    this.editStart = this.editStart.bind(this);
   }
 
   componentDidMount(){
@@ -30,16 +32,35 @@ class App extends Component {
     })
   }
 
+  editStart(obj){
+    this.setState({
+      editting: true,
+      changeProduct: {
+        id: obj.id,
+        name: obj.name,
+        price: obj.price,
+        imgurl: obj.imgurl
+      }
+    })
+  }
+
 
   render() {
+    let {inventory, editting} = this.state;
     return (
       <div className="App">
         <Header />
         <Dashboard 
-          inventory={this.state.inventory}
+          inventory={inventory}
+          editting={editting}
+          editStartFn={this.editStart}
+          getProducts={this.getProducts}
         />
         <Form 
+          inventory={inventory}
           getProducts={this.getProducts}
+          editting={editting}
+          changeProduct={this.state.changeProduct}
         />
       </div>
     );

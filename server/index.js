@@ -13,6 +13,8 @@ massive(process.env.CONNECTION_STRING).then(dbInstance => {
     app.set('db', dbInstance) ;
     app.get('/api/inventory', ctrl.getProducts);
     app.post('/api/product', ctrl.postProduct);
+    app.delete('/api/product/:id', ctrl.deleteProduct);
+    app.put('/api/product/:id', ctrl.editProduct);
 })
 
 app.listen(port, () => {
