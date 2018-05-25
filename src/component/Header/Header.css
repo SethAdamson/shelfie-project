@@ -1,0 +1,18 @@
+.header {
+    height: 80px;
+    width: 100%;
+    background-color: #ab2a19;
+    display: flex;
+    align-items: center
+}
+
+.shelfie {
+    float: left;
+    margin: 5px;
+}
+
+.title {
+    margin: 15px;
+    float: left;
+    color: white;
+}

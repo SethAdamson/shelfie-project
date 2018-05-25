@@ -1,5 +1,5 @@
 module.exports = {
-    getProducts: (req, res) => {
+    getAll: (req, res) => {
         const dbInstance = req.app.get('db');
         dbInstance.get_inventory()
         .then(products => res.status(200).send(products))
@@ -31,6 +31,15 @@ module.exports = {
         const dbInstance = req.app.get('db');
         dbInstance.update_product([id, name, price, imgurl])
         .then(() => res.status(200).send())
+        .catch(() => res.status(500).send())
+    },
+
+    getSingle: (req, res) => {
+        const dbInstance = req.app.get('db');
+        let {id} = req.params;
+
+        dbInstance.get_single([id])
+        .then(product => res.status(200).send(product))
         .catch(() => res.status(500).send())
     }
 }

@@ -1,22 +1,40 @@
 import React, {Component} from 'react';
 import Product from '../Product/Product'
-import { SIGTERM } from 'constants';
 import axios from 'axios';
 
 export default class Dashboard extends Component {
     constructor(){
         super();
 
+        this.state = {
+            inventory: [],
+        }
+
+        this.getProducts = this.getProducts.bind(this);
         this.deleteProduct = this.deleteProduct.bind(this);
     }
 
+    componentDidMount(){
+        this.getProducts();
+      }
+
+    getProducts() {
+        axios.get('/api/inventory').then(res => {
+        console.log(res.data);
+        this.setState({
+          inventory: res.data
+        })
+      })
+    }
+
     deleteProduct(id){
-        axios.delete(`api/product/${id}`).then(res => this.props.getProducts())
+        axios.delete(`api/product/${id}`).then(res => this.getProducts())
       }
 
 
     render(){
-        let {inventory, editStartFn} = this.props;
+        let {editStartFn} = this.props;
+        let {inventory} = this.state;
         let display = inventory.map(item => {
             return(
                 <div key={item.id} className='productParent'>
