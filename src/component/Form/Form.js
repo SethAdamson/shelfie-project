@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 
 export default class Form extends Component {
     constructor(){
@@ -37,6 +38,16 @@ resetState(){
         price: 0,
         imgurl: ''
     })
+    this.refs.form.reset();
+}
+
+postProduct(){
+    let {name, price, imgurl} = this.state;
+    axios.post('/api/product',{name, price, imgurl}).then(res => {
+        this.props.getProducts();
+        this.resetState();
+        this.refs.form.reset();
+    })
 }
 
 
@@ -44,14 +55,25 @@ resetState(){
         console.log(this.state)
         return(
             <div className='formParent'>
-                Image URL:
-                <input className='image' onChange={(e) => this.handleImage(e.target.value)}/>
-                Product Name:
-                <input className='name' onChange={(e) => this.handleName(e.target.value)} />
-                Price:
-                <input className='price' onChange={(e) => this.handlePrice(e.target.value)} />
-                <button className='cancel' onClick={() => this.resetState()} >Cancel</button>
-                <button  className=''>Add to Inventory</button>
+                <form onSubmit={() => this.postProduct()} ref='form' >
+                    Image URL:
+                    <input 
+                        className='image' 
+                        onChange={(e) => this.handleImage(e.target.value)}
+                        />
+                    Product Name:
+                    <input 
+                        className='name' 
+                        onChange={(e) => this.handleName(e.target.value)} 
+                        />
+                    Price:
+                    <input 
+                        className='price' 
+                        onChange={(e) => this.handlePrice(e.target.value)} 
+                        />
+                    <button className='cancel' onClick={() => this.resetState()} >Cancel</button>
+                    <button  type='submit' className='add' onClick={() => this.postProduct()} >Add to Inventory</button>
+                </form>
             </div> 
         )
     }
